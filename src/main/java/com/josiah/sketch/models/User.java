@@ -1,12 +1,18 @@
 package com.josiah.sketch.models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -54,7 +60,50 @@ public class User {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date updatedAt;
   
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+    private List<Idea> ideas;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	        name = "writers_songs", 
+	        joinColumns = @JoinColumn(name = "user_id"), 
+	        inverseJoinColumns = @JoinColumn(name = "song_id")
+	    )
+	private List<Song> songs;
+    
     public User() {}
+
+	public List<Idea> getIdeas() {
+		return ideas;
+	}
+
+	public void setIdeas(List<Idea> ideas) {
+		this.ideas = ideas;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public List<Song> getSongs() {
+		return songs;
+	}
+
+	public void setSongs(List<Song> songs) {
+		this.songs = songs;
+	}
 
 	public Long getId() {
 		return id;

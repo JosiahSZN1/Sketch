@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.josiah.sketch.models.Chorus;
+import com.josiah.sketch.models.Idea;
 import com.josiah.sketch.models.LoginUser;
 import com.josiah.sketch.models.Song;
 import com.josiah.sketch.models.User;
 import com.josiah.sketch.models.Verse;
 import com.josiah.sketch.services.ChorusService;
+import com.josiah.sketch.services.IdeaService;
 import com.josiah.sketch.services.SongService;
 import com.josiah.sketch.services.UserService;
 import com.josiah.sketch.services.VerseService;
@@ -39,6 +41,9 @@ public class HomeController {
 	
 	@Autowired
 	private UserService userServ;
+	
+	@Autowired
+	private IdeaService ideaServ;
 	
 	@GetMapping("/")
 	public String rIndex(
@@ -61,11 +66,12 @@ public class HomeController {
     		@Valid @ModelAttribute("newUser") User newUser, 
             BindingResult result, HttpSession session, Model model
             ) {
-        userServ.register(newUser, result);     
+            
         if(result.hasErrors()) {
         	model.addAttribute("newLogin", new LoginUser());
             return "register.jsp";
         }
+        userServ.register(newUser, result); 
         session.setAttribute("id", newUser.getId());
         return "redirect:/home";
     }
@@ -84,7 +90,7 @@ public class HomeController {
     }
 	
 	@GetMapping("/home")
-    public String rSuccess(Model model, HttpSession session) {
+    public String rSuccess(Model model, HttpSession session, @ModelAttribute("newIdea") Idea newIdea) {
     	Long userId = (Long) session.getAttribute("id");
     	if(userId==null) {
     		return "redirect:/";
@@ -95,6 +101,19 @@ public class HomeController {
     	model.addAttribute("allSongs", allSongs);
     	return "dashboard.jsp";
     }
+	
+//	NEED TO REMAIN IN SESSION IF ERROR IN IDEA INPUT
+	
+	@PostMapping("/newIdea")
+	public String pNewIdea(@Valid @ModelAttribute("newIdea") Idea idea, BindingResult result, HttpSession session, Model model) {
+		if(result.hasErrors()) {
+			model.addAttribute("newIdea", new Idea());
+			return "dashboard.jsp";
+		}
+		ideaServ.createOrUpdateIdea(idea);
+		model.addAttribute("newIdea", new Idea());
+		return "redirect:/home";
+	}
 	
 	@GetMapping("/logout")
     public String logout(HttpSession session) {
