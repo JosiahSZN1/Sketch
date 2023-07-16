@@ -37,7 +37,7 @@ public class Song {
 	private List<Verse> verses;
 	private String title;
 	
-	
+//	MAYBE TAKE A STEP BACK WITH SONG STRUCTURE AND JUST ADD CHORUS AND VERSE LINES INDIVIDUALLY TO SONG OBJECT
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
