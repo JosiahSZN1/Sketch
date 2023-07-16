@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import com.josiah.sketch.models.Idea;
 import com.josiah.sketch.repositories.IdeaRepository;
@@ -15,7 +16,10 @@ public class IdeaService {
 	@Autowired
 	private IdeaRepository ideaRepo;
 	
-	public Idea createOrUpdateIdea(Idea i) {
+	public Idea createOrUpdateIdea(Idea i, BindingResult result) {
+		if(result.hasErrors()) {
+			return null;
+		}
 		return ideaRepo.save(i);
 	}
 	
