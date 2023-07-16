@@ -20,7 +20,7 @@
 			
 			<div class="col-6">
 				<h2>Sign in</h2>
-				<form:form action="/login" method="POST" modelAttribute="newLogin" class="form">
+				<form:form action="/" method="POST" modelAttribute="newLogin" class="form">
 					<div class="form-group mb-3">
 						<form:label path="userName" class="form-label">Username: </form:label>
 						<form:errors path="userName" class="text-danger"/>

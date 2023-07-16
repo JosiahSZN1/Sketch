@@ -14,6 +14,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -28,13 +29,14 @@ public class Idea {
 	private Date updatedAt;
 	
 	@NotEmpty(message="You cannot save an empty idea")
-	@Size(max=140, message="Idea cannot exceed 140 characters")
+	@Size(min=2, max=140, message="Idea cannot exceed 140 characters")
 	private String text;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
 	
+	@NotNull
 	public Idea() {}
 	
 	

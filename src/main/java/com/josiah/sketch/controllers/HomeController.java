@@ -76,7 +76,7 @@ public class HomeController {
         return "redirect:/home";
     }
 	
-	@PostMapping("/login")
+	@PostMapping("/")
     public String pLogin(@Valid @ModelAttribute("newLogin") LoginUser newLogin, 
             BindingResult result, Model model, HttpSession session) {
          User user = userServ.login(newLogin, result);
@@ -97,20 +97,33 @@ public class HomeController {
     	}
     	User user = userServ.findUser(userId);
     	List <Song> allSongs = songServ.allSongs();
+    	List <Idea> allIdeas = user.getIdeas();
     	model.addAttribute("user", user);
+    	System.out.println(user);
     	model.addAttribute("allSongs", allSongs);
+    	model.addAttribute("allIdeas", allIdeas);
     	return "dashboard.jsp";
     }
 	
 //	NEED TO REMAIN IN SESSION IF ERROR IN IDEA INPUT
 	
-	@PostMapping("/newIdea")
-	public String pNewIdea(@Valid @ModelAttribute("newIdea") Idea idea, BindingResult result, HttpSession session, Model model) {
+	@PostMapping("/home")
+	public String pNewIdea(@Valid @ModelAttribute("newIdea") Idea idea, BindingResult result, Model model, HttpSession session) {
+		Long userId = (Long) session.getAttribute("id");
+		
 		if(result.hasErrors()) {
-			model.addAttribute("newIdea", new Idea());
+			model.addAttribute("addNewIdea", new Idea());
+			User user = userServ.findUser(userId);
+	    	List <Song> allSongs = songServ.allSongs();
+	    	model.addAttribute("user", user);
+	    	model.addAttribute("allSongs", allSongs);
+			System.out.println(session.getAttribute("id"));
+			System.out.println(result.getAllErrors());
+			System.out.println(result.getRawFieldValue("user"));
 			return "dashboard.jsp";
 		}
-		ideaServ.createOrUpdateIdea(idea);
+		System.out.println("No error");
+		ideaServ.createOrUpdateIdea(idea, result);
 		model.addAttribute("newIdea", new Idea());
 		return "redirect:/home";
 	}

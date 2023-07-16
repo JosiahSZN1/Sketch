@@ -48,18 +48,23 @@
 			<h3>Your ideas... </h3>
 			<div>
 				<c:forEach var="idea" items="${allIdeas}">
-				
+					<div>
+						<button >Use</button>
+						<c:out value="${idea.text}"/>
+						<button>Delete</button>
+					</div>
 				</c:forEach>
 			</div>
 		</div>
-		<form:form action="/newIdea" method="POST" modelAttribute="newIdea" class="form">
+		<form:form action="/home" method="POST" modelAttribute="newIdea" class="form">
 					<div class="form-group mb-3">
 						<form:label path="text" class="form-label">New Idea: </form:label>
 						<form:errors path="text" class="text-danger"/>
 						<form:input path="text" type="text" class="form-control"/>
 					</div>
-						<form:input path="user" type="hidden" value="${user}"/>
-					<input type="submit" value="+" class="btn btn-success float-end">
+<!-- 					THE VALUE FOR USER HAS TO BE USER ID BECAUSE THAT IS THE VALUE BEING STORED IN THE FOREIGN KEY FOR IDEA -->
+						<form:hidden path="user" value="${user.id}"/>
+					<input type="submit" value="+" class="btn btn-success float-end"/>
 		</form:form>
 		
 	</div>
