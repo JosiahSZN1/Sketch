@@ -1,7 +1,9 @@
 package com.josiah.sketch.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,19 @@ public class SongService {
 		} else {
 			return null;
 		}
+	}
+	
+	public String genRandSect() {
+	    Random rand = new Random();
+	    List<String> givenList = Arrays.asList("titleIdea", "themeIdea", "verse1Line1idea", "verse1Line2idea", "verse1Line3idea", "verse1Line4idea", "chorusLine1idea", "chorusLine2idea", "chorusLine3idea", "chorusLine4idea", "verse2Line1idea", "verse2Line2idea", "verse2Line3idea", "verse2Line4idea", "bridgeLine1idea", "bridgeLine2idea", "bridgeLine3idea", "bridgeLine4idea");
+
+	    int numberOfElements = 18;
+	    String randomElement = "";
+	    for (int i = 0; i < numberOfElements; i++) {
+	        int randomIndex = rand.nextInt(givenList.size());
+	        randomElement = givenList.get(randomIndex);
+	    }
+	    return randomElement;
 	}
 	
 	public Song addVerses(Long songID, Long verseID) {
