@@ -106,6 +106,15 @@ public class HomeController {
     	return "dashboard.jsp";
     }
 	
+	@GetMapping("/new/{ideaID}")
+	public String rNewTemplate(Model model, @PathVariable("ideaID") Long id, @ModelAttribute("newSong") Song newSong, BindingResult result) {
+		Idea idea = ideaServ.findIdea(id);
+		String randString = songServ.genRandSect();
+		System.out.println(randString);
+		model.addAttribute(randString, idea.getText());
+		return "songForm2.jsp";
+	}
+	
 	@DeleteMapping("/{ideaID}/delete")
 	public String pDelete(@PathVariable("ideaID") Long id) {
 		ideaServ.deleteIdea(id);
@@ -147,21 +156,25 @@ public class HomeController {
 		return "songForm.jsp";
 	}
 	
-	@PostMapping("/song/new")
+	@PostMapping("/new")
 	public String pNewSong(@Valid @ModelAttribute("newSong") Song song, BindingResult result, HttpSession session) {
 		if(result.hasErrors()) {
-			return "songForm.jsp";
+			return "songForm2.jsp";
 		}
 		
-		User thisUser = userServ.findUser((Long) session.getAttribute("id"));
-		song.getWriters().add(thisUser);
+//		
 		
-		return "redirect:/song/" + song.getId();
+		System.out.println(session.getAttribute("id"));
+		Song thisSong = songServ.createOrUpdateSong(song);
+		User thisUser = userServ.findUser((Long) session.getAttribute("id"));
+		thisSong.getWriters().add(thisUser);
+		
+		return "redirect:/" + thisSong.getId();
 	}
 	
 
 	
-	@RequestMapping("/song/{songID}")
+	@RequestMapping("/{songID}")
 	public String rNewVerse(@PathVariable("songID") Long songID, Model model, HttpSession session) {
 		User currentUser = userServ.findUser((Long) session.getAttribute("id"));
 		Song currentSong = songServ.findSong(songID);

@@ -49,7 +49,7 @@
 			<div>
 				<c:forEach var="idea" items="${allIdeas}">
 					<div>
-						<a href="/new/${idea.text}">Generate template</a>
+						<a href="/new/${idea.id}">Generate template</a>
 						<c:out value="${idea.text}"/>
 						<form action="/${idea.id}/delete" method="post">
     						<input type="hidden" name="_method" value="delete">
