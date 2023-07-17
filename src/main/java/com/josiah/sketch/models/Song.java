@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name="songs")
@@ -33,6 +34,15 @@ public class Song {
 //	@OneToMany(mappedBy="song", fetch = FetchType.LAZY)
 //	private List<Verse> verses;
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	        name = "writers_songs", 
+	        joinColumns = @JoinColumn(name = "song_id"), 
+	        inverseJoinColumns = @JoinColumn(name = "user_id")
+	    )
+	private List <User> writers = new ArrayList<User>();
+	
+	@NotEmpty(message="Let's give it a name at least")
 	private String title;
 	
 	private String theme;
@@ -327,13 +337,7 @@ public class Song {
 	public void setBridgeLine4(String bridgeLine4) {
 		this.bridgeLine4 = bridgeLine4;
 	}
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-	        name = "writers_songs", 
-	        joinColumns = @JoinColumn(name = "song_id"), 
-	        inverseJoinColumns = @JoinColumn(name = "user_id")
-	    )
-	private List <User> writers = new ArrayList<User>();
+	
 	
 	
 	

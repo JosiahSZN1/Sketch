@@ -11,48 +11,90 @@
 <body>
 	<div class="container">
 		<div>
-			<h1>Title: <c:out value="${song.title}"/></h1>
-			<p>By: <c:forEach var="writer" items="${song.writers}"><c:out value="${writer.name}"/></c:forEach>
+			<h2><c:out value="${song.title}"/></h2>
+			<p>By: <c:forEach var="writer" items="${song.writers}"><c:out value="${writer.userName}"/></c:forEach>
 			
 			</p>
-			<c:if test="${!song.writers.contains(user)}">
+			<div style="display:flex; flex-direction:row; justify-content:end">
+				<c:if test="${song.writers.contains(user)}">
+					<a href="/${song.id}/edit">Edit</a> |
+				</c:if>
+				<a href="/home">Home</a>
+			</div>
+			
+			<%-- <c:if test="${!song.writers.contains(user)}">
 				<a href="">Request collaboration</a>
-			</c:if>
+			</c:if> --%>
+			
+		</div>
+		<div>
+			
+				<h4>Verse 1:</h4>
+				<p><c:out value="${song.verse1Line1}"/></p>
+				<p><c:out value="${song.verse1Line2}"/></p>
+				<p><c:out value="${song.verse1Line3}"/></p>
+				<p><c:out value="${song.verse1Line4}"/></p> 
+				<%-- <c:if test="${song.writers.contains(user)}">
+					<a href="/${song.id}/verse/new">Edit Verse</a>
+				</c:if> --%>
+			
+			<hr>
+			<%-- <c:if test="${song.writers.contains(user)}">
+				<a href="/${song.id}/verse/new">Add a Verse</a>
+			</c:if> --%>
 			
 		</div>
 		<div>
 			<h3>Chorus: </h3>
-			<p><c:out value="${song.chorus.lineA}"/></p>
-			<p><c:out value="${song.chorus.lineB}"/></p>
-			<p><c:out value="${song.chorus.lineC}"/></p>
-			<p><c:out value="${song.chorus.lineD}"/></p>
-			<c:if test="${song.writers.contains(user)}">
-				<c:choose>
+			<p><c:out value="${song.chorusLine1}"/></p>
+			<p><c:out value="${song.chorusLine2}"/></p>
+			<p><c:out value="${song.chorusLine3}"/></p>
+			<p><c:out value="${song.chorusLine4}"/></p>
+			<%-- <c:if test="${song.writers.contains(user)}">
+				
 					<c:when test="${song.chorus == null}">
 						<a href="/${song.id}/chorus/new">Add a Chorus</a>
 					</c:when>
-					<c:otherwise>
+				
 						<a href="">Edit Chorus</a>
-					</c:otherwise>
-				</c:choose>
-			</c:if>
+					
+				
+			</c:if> --%>
 			
 		</div>
 		<div>
-			<c:forEach var="verse" items="${song.verses}">
-				<h4>Verse <c:out value="${song.verses.indexOf(verse) + 1}"/>:</h4>
-				<p><c:out value="${verse.lineA}"/></p>
-				<p><c:out value="${verse.lineB}"/></p>
-				<p><c:out value="${verse.lineC}"/></p>
-				<p><c:out value="${verse.lineD}"/></p> 
-				<c:if test="${song.writers.contains(user)}">
+			
+				<h4>Verse 2:</h4>
+				<p><c:out value="${song.verse2Line1}"/></p>
+				<p><c:out value="${song.verse2Line2}"/></p>
+				<p><c:out value="${song.verse2Line3}"/></p>
+				<p><c:out value="${song.verse2Line4}"/></p> 
+				<%-- <c:if test="${song.writers.contains(user)}">
 					<a href="/${song.id}/verse/new">Edit Verse</a>
 				</c:if>
-			</c:forEach>
+			
 			<hr>
 			<c:if test="${song.writers.contains(user)}">
 				<a href="/${song.id}/verse/new">Add a Verse</a>
-			</c:if>
+			</c:if> --%>
+			
+		</div>
+		<h3>Chorus</h3>
+		<div>
+			
+				<h4>Bridge:</h4>
+				<p><c:out value="${song.bridgeLine1}"/></p>
+				<p><c:out value="${song.bridgeLine2}"/></p>
+				<p><c:out value="${song.bridgeLine3}"/></p>
+				<p><c:out value="${song.bridgeLine4}"/></p> 
+				<%-- <c:if test="${song.writers.contains(user)}">
+					<a href="/${song.id}/verse/new">Edit Verse</a>
+				</c:if> --%>
+			
+			<hr>
+			<%-- <c:if test="${song.writers.contains(user)}">
+				<a href="/${song.id}/verse/new">Add a Verse</a>
+			</c:if> --%>
 			
 		</div>
 	</div>

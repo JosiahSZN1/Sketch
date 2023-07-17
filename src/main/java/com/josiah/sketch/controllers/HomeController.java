@@ -16,26 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.josiah.sketch.models.Chorus;
 import com.josiah.sketch.models.Idea;
 import com.josiah.sketch.models.LoginUser;
 import com.josiah.sketch.models.Song;
 import com.josiah.sketch.models.User;
-import com.josiah.sketch.models.Verse;
-import com.josiah.sketch.services.ChorusService;
 import com.josiah.sketch.services.IdeaService;
 import com.josiah.sketch.services.SongService;
 import com.josiah.sketch.services.UserService;
-import com.josiah.sketch.services.VerseService;
 
 @Controller
 public class HomeController {
-	
-	@Autowired
-	private VerseService verseServ;
-	
-	@Autowired
-	private ChorusService chorusServ;
 	
 	@Autowired
 	private SongService songServ;
@@ -65,7 +55,9 @@ public class HomeController {
 	@PostMapping("/register")
     public String pRegister(
     		@Valid @ModelAttribute("newUser") User newUser, 
-            BindingResult result, HttpSession session, Model model
+            BindingResult result, 
+            HttpSession session, 
+            Model model
             ) {
             
         if(result.hasErrors()) {
@@ -78,10 +70,13 @@ public class HomeController {
     }
 	
 	@PostMapping("/")
-    public String pLogin(@Valid @ModelAttribute("newLogin") LoginUser newLogin, 
-            BindingResult result, Model model, HttpSession session) {
-         User user = userServ.login(newLogin, result);
-    
+    public String pLogin(
+    		@Valid @ModelAttribute("newLogin") LoginUser newLogin, 
+            BindingResult result,
+            HttpSession session,
+            Model model
+            ) {
+        User user = userServ.login(newLogin, result);
         if(result.hasErrors()) {
             model.addAttribute("newUser", new User());
             return "index.jsp";
@@ -91,7 +86,11 @@ public class HomeController {
     }
 	
 	@GetMapping("/home")
-    public String rSuccess(Model model, HttpSession session, @ModelAttribute("newIdea") Idea newIdea) {
+    public String rDashboard( 
+    		@ModelAttribute("newIdea") Idea newIdea,
+    		HttpSession session,
+    		Model model
+    		) {
     	Long userId = (Long) session.getAttribute("id");
     	if(userId==null) {
     		return "redirect:/";
@@ -100,31 +99,38 @@ public class HomeController {
     	List <Song> allSongs = songServ.allSongs();
     	List <Idea> allIdeas = user.getIdeas();
     	model.addAttribute("user", user);
-    	System.out.println(user);
     	model.addAttribute("allSongs", allSongs);
     	model.addAttribute("allIdeas", allIdeas);
     	return "dashboard.jsp";
     }
 	
 	@GetMapping("/new/{ideaID}")
-	public String rNewTemplate(Model model, @PathVariable("ideaID") Long id, @ModelAttribute("newSong") Song newSong, BindingResult result) {
+	public String rNewTemplate(
+			@PathVariable("ideaID") Long id, 
+			@ModelAttribute("newSong") Song newSong, 
+			BindingResult result,
+			Model model
+			) {
 		Idea idea = ideaServ.findIdea(id);
 		String randString = songServ.genRandSect();
-		System.out.println(randString);
 		model.addAttribute(randString, idea.getText());
+		model.addAttribute("ideaID", id);
 		return "songForm2.jsp";
 	}
 	
-	@DeleteMapping("/{ideaID}/delete")
+	@DeleteMapping("/idea/{ideaID}/delete")
 	public String pDelete(@PathVariable("ideaID") Long id) {
 		ideaServ.deleteIdea(id);
 		return "redirect:/home";
 	}
 	
-//	NEED TO REMAIN IN SESSION IF ERROR IN IDEA INPUT
-	
 	@PostMapping("/home")
-	public String pNewIdea(@Valid @ModelAttribute("newIdea") Idea idea, BindingResult result, Model model, HttpSession session) {
+	public String pNewIdea(
+			@Valid @ModelAttribute("newIdea") Idea idea, 
+			BindingResult result, 
+			HttpSession session,
+			Model model
+			) {
 		Long userId = (Long) session.getAttribute("id");
 		
 		if(result.hasErrors()) {
@@ -133,49 +139,44 @@ public class HomeController {
 	    	List <Song> allSongs = songServ.allSongs();
 	    	model.addAttribute("user", user);
 	    	model.addAttribute("allSongs", allSongs);
-			System.out.println(session.getAttribute("id"));
-			System.out.println(result.getAllErrors());
-			System.out.println(result.getRawFieldValue("user"));
 			return "dashboard.jsp";
 		}
-		System.out.println("No error");
 		ideaServ.createOrUpdateIdea(idea, result);
 		model.addAttribute("newIdea", new Idea());
 		return "redirect:/home";
 	}
 	
 	@GetMapping("/logout")
-    public String logout(HttpSession session) {
-   	 session.setAttribute("id", null);
-   	 return "redirect:/";
+    public String rLogout(HttpSession session) {
+   	 	session.setAttribute("id", null);
+   	 	return "redirect:/";
     }
 	
-	
-	@GetMapping("/song/new")
-	public String rNewSong(@ModelAttribute("newSong") Song song) {
-		return "songForm.jsp";
-	}
-	
-	@PostMapping("/new")
-	public String pNewSong(@Valid @ModelAttribute("newSong") Song song, BindingResult result, HttpSession session) {
+	@PostMapping("/new/{ideaID}")
+	public String pNewSong(
+			@Valid @ModelAttribute("newSong") Song song, 
+			@PathVariable("ideaID") Long usedIdeaID,
+			BindingResult result, 
+			HttpSession session
+			) {
 		if(result.hasErrors()) {
 			return "songForm2.jsp";
 		}
-		
-//		
-		
-		System.out.println(session.getAttribute("id"));
-		Song thisSong = songServ.createOrUpdateSong(song);
 		User thisUser = userServ.findUser((Long) session.getAttribute("id"));
-		thisSong.getWriters().add(thisUser);
+//	HAD TO ADD WRITER TO SONG BEFORE CREATING THE SONG OTHER WISE
+		song.getWriters().add(thisUser);
+		Song thisSong = songServ.createOrUpdateSong(song);
+		ideaServ.deleteIdea(usedIdeaID);
 		
 		return "redirect:/" + thisSong.getId();
 	}
 	
-
-	
 	@RequestMapping("/{songID}")
-	public String rNewVerse(@PathVariable("songID") Long songID, Model model, HttpSession session) {
+	public String rSong(
+			@PathVariable("songID") Long songID, 
+			HttpSession session,
+			Model model
+			) {
 		User currentUser = userServ.findUser((Long) session.getAttribute("id"));
 		Song currentSong = songServ.findSong(songID);
 		model.addAttribute("song", currentSong);
@@ -183,37 +184,41 @@ public class HomeController {
 		return "song.jsp";
 	}
 	
-	@RequestMapping("/{songID}/verse/new")
-	public String rNewVerse(@ModelAttribute("newVerse") Verse verse, @PathVariable("songID") Long songID, BindingResult result, Model model) {
-		Song currentSong = songServ.findSong(songID);
-		model.addAttribute("song", currentSong);
-		return "verseForm.jsp";
+	@GetMapping("/{songID}/edit")
+	public String rEdit(
+			@ModelAttribute("editSong") Song editSong,
+			@PathVariable("songID") Long id, 
+			BindingResult result,
+			Model model 
+			) {
+		Song song = songServ.findSong(id);
+		model.addAttribute("song", song);
+		return "editSongForm.jsp";
 	}
 	
-	@PostMapping("/{songID}/verse/new")
-	public String pNewVerse(@ModelAttribute("newVerse") Verse verse, BindingResult result, @PathVariable("songID") Long songID) {
-		Song thisSong = songServ.findSong(songID);
-		Verse thisVerse = verseServ.createOrUpdateVerse(verse);
-		thisVerse.setSong(thisSong);
-		songServ.createOrUpdateSong(thisSong);
-		return "redirect:/song/" + songID;
+	@PostMapping("/{songID}/update")
+	public String pUpdateSong(
+			@Valid @ModelAttribute("editSong") Song song,
+			@PathVariable("songID") Long id, 
+			BindingResult result, 
+			HttpSession session,
+			Model model
+			) {
+		if(result.hasErrors()) {
+			model.addAttribute("Song", new Song());
+	    	Song thisSong = songServ.findSong(id);
+	    	model.addAttribute("song", thisSong);
+			return "editSongForm.jsp";
+		}
+		User thisUser = userServ.findUser((Long) session.getAttribute("id"));
+		song.getWriters().add(thisUser);
+		Song thisSong = songServ.createOrUpdateSong(song);
+		return "redirect:/" + thisSong.getId();
 	}
 	
-	@RequestMapping("/{songID}/chorus/new")
-	public String rNewChorus(@ModelAttribute("newChorus") Chorus chorus, @PathVariable("songID") Long songID, BindingResult result, Model model) {
-		Song thisSong = songServ.findSong(songID);
-		model.addAttribute("song", thisSong);
-		return "chorusForm.jsp";
+	@DeleteMapping("/song/{songID}/delete")
+	public String pDeleteSong(@PathVariable("songID") Long id) {
+		songServ.deleteSong(id);
+		return "redirect:/home";
 	}
-	
-	@PostMapping("/{id}/chorus/new")
-	public String pNewChorus(@ModelAttribute("newChorus") Chorus newChorus, BindingResult result, @PathVariable ("id") Long songID) {
-		Song thisSong = songServ.findSong(songID);
-		newChorus.setSong(thisSong);
-		chorusServ.createOrUpdateChorus(newChorus);
-		return "redirect:/song/" + songID;
-	}
-	
-	
-
 }
