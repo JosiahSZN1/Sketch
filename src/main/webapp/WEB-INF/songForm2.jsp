@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div class="container">
-		<form:form action="/new" method="POST" modelAttribute="newSong">
+		<form:form action="/new/${ideaID}" method="POST" modelAttribute="newSong">
 			<div>
 				<div class="form-group">
 					<form:label path="title">Title: </form:label>
@@ -22,6 +22,7 @@
 					<%-- <form:input path="theme"/> --%>
 					<form:input path="theme" value="${themeIdea}"/>
 				</div>
+				<a href="/home">Home</a>
 			</div>
 			<div>
 				<p>Verse 1</p>
@@ -54,6 +55,7 @@
 			<%-- <form:hidden path="song" value="${song}"/> --%>
 			<input type="submit" value="Save" class="btn btn-primary"/>
 		</form:form>
+		<a href="/new/${ideaID}">Regenerate</a>
 	</div>
 </body>
 </html>

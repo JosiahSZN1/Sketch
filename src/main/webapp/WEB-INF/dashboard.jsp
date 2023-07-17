@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,18 +16,19 @@
 		<div class="navbar d-flex justify-content between" style="display:flex; justify-content:space-between">
 			<div class="row">
 				<h1 style="color:rgb(0,0,0)">Sketch</h1>
-				<h4>Welcome, <c:out value="${user.userName}"/>! Here's what you're working on!</h4>
-				<a href="/logout">logout</a>
+				<h4>Welcome, <c:out value="${user.userName}"/>! Here's what we're working on!</h4>
+				
 			</div>
 			<div style="display:flex; flex-direction:column; align-items:end">
-				<a href="/song/new">+ Write a new song</a>
+				<!-- <a href="/song/new">+ Write a new song</a> -->
+				<a href="/logout">Sign out</a>
 			</div>
 		</div>
 		<div class="">
 			<table class="table table-striped border border-3 border-dark">
 				<thead style="background-color:rgb(204,204,204)">
 					<tr>
-						<th class="border border-3 border-dark border-bottom-0">ID</th>
+						<!-- <th class="border border-3 border-dark border-bottom-0">ID</th> -->
 						<th class="border border-3 border-dark border-bottom-0">Title</th>
 						<th class="border border-3 border-dark border-bottom-0">Writer(s)</th>
 						
@@ -35,8 +37,15 @@
 				<tbody>
 					<c:forEach var="song" items="${allSongs}">
 						<tr>
-							<td class="border border-3 border-dark border-top-0 border-bottom-0"><c:out value="${song.id}"/></td>
-							<td class="border border-3 border-dark border-top-0 border-bottom-0"><a href="/song/${song.id}"><c:out value="${song.title}"/></a></td>
+							<%-- <td class="border border-3 border-dark border-top-0 border-bottom-0"><c:out value="${song.id}"/></td> --%>
+							<td class="border border-3 border-dark border-top-0 border-bottom-0">
+								<a href="/${song.id}">
+									<c:if test="${fn:length(song.title) <= 0}">
+										<c:out value="untitled project ${song.id}"/>
+									</c:if>	
+									<c:out value="${song.title}"/>
+								</a>
+							</td>
 							<td class="border border-3 border-dark border-top-0 border-bottom-0"><c:forEach var="writer" items="${song.writers}"><c:out value="${writer.userName}"/> </c:forEach></td>
 						<%-- 	<td class="border border-3 border-dark border-top-0 border-bottom-0"><c:out value="${song.user.name}"/></td> --%>
 						</tr>

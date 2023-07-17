@@ -10,10 +10,9 @@ import com.josiah.sketch.models.User;
 
 @Repository
 public interface UsersRepository extends CrudRepository<User, Long> {
-	
 	Optional<User> findByEmail(String email);
+	Optional<User> findById(Long id);
 	Optional<User> findByUserName(String userName);
-	
 	List<User> findAll();
-
+	
 }
