@@ -33,24 +33,25 @@ public class User {
     
 //    Username - letters only, at least 3 characters, not blank
     
-    @NotEmpty(message="Username is required!") 
-    @Size(min=3, max=30, message="Username must be between 3 and 30 characters")
+    @NotEmpty(message="Username is required.")
+//    @Pattern(regexp="^[a-zA-Z0-9_ ]*$",message = "Invalid Input")
+    @Size(min=3, max=30, message="Username must be between 3 and 30 characters.")
     private String userName;
     
 //    Email - valid Email format, does not already exist in the database, not blank
     
-    @NotEmpty(message="Email is required!")
-    @Email(message="Please enter a valid email!")
+    @NotEmpty(message="Email is required.")
+    @Email(message="Please enter a valid email.")
     private String email;
     
 //    Password - at least 8 characters, not blank
     
-    @NotEmpty(message="Password is required!")
+    @NotEmpty(message="Password is required.")
     @Size(min=8, max=128, message="Password must be between 8 and 128 characters")
     private String password;
     
     @Transient
-    @NotEmpty(message="Confirm Password is required!")
+    @NotEmpty(message="Please confirm password.")
     private String confirm;
     
     @Column(updatable=false)

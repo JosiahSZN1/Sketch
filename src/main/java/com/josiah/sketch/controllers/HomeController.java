@@ -119,7 +119,10 @@ public class HomeController {
 	}
 	
 	@DeleteMapping("/idea/{ideaID}/delete")
-	public String pDelete(@PathVariable("ideaID") Long id) {
+	public String pDelete(
+			@PathVariable("ideaID") Long id,
+			Model model
+			) {
 		ideaServ.deleteIdea(id);
 		return "redirect:/home";
 	}
@@ -137,8 +140,10 @@ public class HomeController {
 			model.addAttribute("addNewIdea", new Idea());
 			User user = userServ.findUser(userId);
 	    	List <Song> allSongs = songServ.allSongs();
+	    	List <Idea> allIdeas = user.getIdeas();
 	    	model.addAttribute("user", user);
 	    	model.addAttribute("allSongs", allSongs);
+	    	model.addAttribute("allIdeas", allIdeas);
 			return "dashboard.jsp";
 		}
 		ideaServ.createOrUpdateIdea(idea, result);
@@ -154,8 +159,8 @@ public class HomeController {
 	
 	@PostMapping("/new/{ideaID}")
 	public String pNewSong(
-			@Valid @ModelAttribute("newSong") Song song, 
 			@PathVariable("ideaID") Long usedIdeaID,
+			@Valid @ModelAttribute("newSong") Song song, 
 			BindingResult result, 
 			HttpSession session
 			) {
@@ -170,7 +175,25 @@ public class HomeController {
 		
 		return "redirect:/" + thisSong.getId();
 	}
-	
+//	@PostMapping("/{songID}/update")
+//	public String pUpdateSong(
+//			@PathVariable("songID") Long id,
+//			@Valid @ModelAttribute("editSong") Song song,
+//			BindingResult result, 
+//			HttpSession session,
+//			Model model
+//			) {
+//		if(result.hasErrors()) {
+//			model.addAttribute("Song", new Song());
+//	    	Song thisSong = songServ.findSong(id);
+//	    	model.addAttribute("song", thisSong);
+//			return "editSongForm.jsp";
+//		}
+//		User thisUser = userServ.findUser((Long) session.getAttribute("id"));
+//		song.getWriters().add(thisUser);
+//		Song thisSong = songServ.createOrUpdateSong(song);
+//		return "redirect:/" + thisSong.getId();
+//	}
 	@RequestMapping("/{songID}")
 	public String rSong(
 			@PathVariable("songID") Long songID, 
@@ -186,8 +209,8 @@ public class HomeController {
 	
 	@GetMapping("/{songID}/edit")
 	public String rEdit(
+			@PathVariable("songID") Long id,
 			@ModelAttribute("editSong") Song editSong,
-			@PathVariable("songID") Long id, 
 			BindingResult result,
 			Model model 
 			) {
@@ -198,8 +221,8 @@ public class HomeController {
 	
 	@PostMapping("/{songID}/update")
 	public String pUpdateSong(
+			@PathVariable("songID") Long id,
 			@Valid @ModelAttribute("editSong") Song song,
-			@PathVariable("songID") Long id, 
 			BindingResult result, 
 			HttpSession session,
 			Model model

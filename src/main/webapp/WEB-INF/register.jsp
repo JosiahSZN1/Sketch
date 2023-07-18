@@ -8,44 +8,44 @@
 <meta charset="UTF-8">
 <!-- for Bootstrap CSS -->
 <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
-<title>Sketch - Write your songs when you can</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<title>Sketch. - Everyone is a song writer.</title>
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<h1 style="color:rgb(0,0,0)">Sketch</h1>
-			<p>A song writing application where you can store unfinished ideas for song lyrics or general song ideas.</p>
+	<div class="container login-page">
+		<div class="login-header">
+			<h1>Sketch.</h1>
+			<p class="small">A song writing application where you can store unfinished ideas for song lyrics or general song ideas.</p>
 		</div>
-		<div class="row">
-			<div class="col-6">
-				<h2>Register</h2>
-				<form:form action="/register" method="POST" modelAttribute="newUser" class="form">
-					<div class="form-group mb-3">
-						<form:label path="userName" class="form-label">User Name: </form:label>
-						<form:errors path="userName" class="text-danger"/>
-						<form:input path="userName" type="text" class="form-control"/>
-					</div>
-					<div class="form-group mb-3">
-						<form:label path="email" class="form-label">Email: </form:label>
-						<form:errors path="email" class="text-danger"/>
-						<form:input path="email" type="text" class="form-control"/>
-					</div>
-					<div class="form-group mb-3">
-						<form:label path="password" class="form-label">Password: </form:label>
-						<form:errors path="password" class="text-danger"/>
-						<form:input path="password" type="password" class="form-control"/>
-					</div>
-					<div class="form-group mb-3">
-						<form:label path="confirm" class="form-label">Confirm PW: </form:label>
-						<form:errors path="confirm" class="text-danger"/>
-						<form:input path="confirm" type="password" class="form-control"/>
-					</div>
-					<input type="submit" value="Register" class="btn btn-success float-end">
-				</form:form>
-				<a href="/">Go back</a>
-			</div>
+		<div class="login-form">
+			<form:form action="/register" method="POST" modelAttribute="newUser" class="form">
+				<h4>Register</h4>
+				<form:errors path="userName" class="text-danger"/>
+				<div class="form-floating mb-3">
+					<form:input type="text" class="form-control" id="floatingInput" placeholder="Username" path="userName" />
+					<form:label for="floatingInput" path="userName">Username</form:label>
+				</div>
+				<form:errors path="email" class="text-danger"/>
+				<div class="form-floating mb-3">
+					<form:input type="text" class="form-control" id="floatingInput" placeholder="email@email.com" path="email" />
+					<form:label for="floatingInput" path="email">Email</form:label>
+				</div>
+				<form:errors path="password" class="text-danger"/>	
+				<div class="form-floating mb-3">
+					<form:input type="password" class="form-control" id="floatingInput" placeholder="Password" path="password" />
+					<form:label for="floatingInput" path="password">Password</form:label>
+				</div>
+				<form:errors path="confirm" class="text-danger"/>
+				<div class="form-floating mb-3">
+					<form:input type="password" class="form-control" id="floatingInput" placeholder="Confirm Password" path="confirm" />
+					<form:label for="floatingInput" path="confirm">Confirm Password</form:label>
+				</div>
+				<div class="form-submit">
+					<input type="submit" value="Register" class="btn btn-success">
+					<a class="small text-end" href="/">Go back</a>
+				</div>
+			</form:form>
 		</div>
-			
 	</div>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <head>
 <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Sketch - <c:out value="${song.title}"/></title>
 </head>
 <body>
 	<div class="container">
