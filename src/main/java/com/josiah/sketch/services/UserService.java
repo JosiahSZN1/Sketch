@@ -25,11 +25,11 @@ public class UserService {
     public User register(User newUser, BindingResult result) {
     	Optional<User>potentialUser = usersRepo.findByEmail(newUser.getEmail());
     	if(potentialUser.isPresent()) {
-        	result.rejectValue("email", "Matches", "Email already taken.");
+        	result.rejectValue("email", "Matches", "Email already registered.");
         }
     	String passwordEntered = newUser.getPassword();
     	if(!passwordEntered.equals(newUser.getConfirm())) {
-    	    result.rejectValue("confirm", "Matches", "The Confirm Password must match Password!");
+    	    result.rejectValue("confirm", "Matches", "The Confirm Password must match Password.");
     	}
     	if(result.hasErrors()) {
     	    return null;
@@ -43,14 +43,14 @@ public class UserService {
     public User login(LoginUser loginUser, BindingResult result) {
     	Optional<User>potentialUser = usersRepo.findByUserName(loginUser.getUserName());
         if(!potentialUser.isPresent()) {
-        	result.rejectValue("userName", "Matches", "Username does not match any records");
+        	result.rejectValue("userName", "Matches", "Username does not match any records.");
         	return null;
         }
         User foundUser = potentialUser.get();
         
  
         if(!BCrypt.checkpw(loginUser.getPassword(), foundUser.getPassword())) {
-        	result.rejectValue("password", "Matches", "Incorrect password");
+        	result.rejectValue("password", "Matches", "Incorrect password entered.");
         }
         if(result.hasErrors()) {
         	return null;

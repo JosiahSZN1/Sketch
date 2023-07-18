@@ -28,8 +28,8 @@ public class Idea {
 	private Date createdAt;
 	private Date updatedAt;
 	
-	@NotEmpty(message="You cannot save an empty idea")
-	@Size(min=2, max=140, message="Idea cannot exceed 140 characters")
+	@NotEmpty(message="You cannot save an empty idea.")
+	@Size(max=140, message="Idea cannot exceed 140 characters.")
 	private String text;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

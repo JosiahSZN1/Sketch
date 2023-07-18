@@ -10,4 +10,5 @@ import com.josiah.sketch.models.Idea;
 @Repository
 public interface IdeaRepository extends CrudRepository<Idea, Long> {
 	List<Idea> findAll();
+	void deleteById(Long id);
 }
