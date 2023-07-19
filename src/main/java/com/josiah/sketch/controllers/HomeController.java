@@ -109,8 +109,13 @@ public class HomeController {
 			@PathVariable("ideaID") Long id, 
 			@ModelAttribute("newSong") Song newSong, 
 			BindingResult result,
+			HttpSession session,
 			Model model
 			) {
+		Long userId = (Long) session.getAttribute("id");
+    	if(userId==null) {
+    		return "redirect:/";
+    	}
 		Idea idea = ideaServ.findIdea(id);
 		String randString = songServ.genRandSect();
 		model.addAttribute(randString, idea.getText());
@@ -200,6 +205,10 @@ public class HomeController {
 			HttpSession session,
 			Model model
 			) {
+		Long userId = (Long) session.getAttribute("id");
+    	if(userId==null) {
+    		return "redirect:/";
+    	}
 		User currentUser = userServ.findUser((Long) session.getAttribute("id"));
 		Song currentSong = songServ.findSong(songID);
 		model.addAttribute("song", currentSong);
@@ -212,8 +221,13 @@ public class HomeController {
 			@PathVariable("songID") Long id,
 			@ModelAttribute("editSong") Song editSong,
 			BindingResult result,
+			HttpSession session,
 			Model model 
 			) {
+		Long userId = (Long) session.getAttribute("id");
+    	if(userId==null) {
+    		return "redirect:/";
+    	}
 		Song song = songServ.findSong(id);
 		model.addAttribute("song", song);
 		return "editSongForm.jsp";
